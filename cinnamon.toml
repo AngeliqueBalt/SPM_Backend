@@ -1,0 +1,45 @@
+# Cinnamon project settings go here.
+[framework]
+    # Framework Core Settings.
+    [framework.core]
+        # Whether or not the app is in development mode.
+        # This is overridden by NODE_ENV if it is set. Refer to the documentation for more information.
+        development_mode = true
+
+    # Framework App Settings.
+    [framework.app]
+        # The app's identifier, used in logging messages.
+        name = "student-progress-monitor"
+
+    # Framework HTTP Settings.
+    # HTTPS is not built into the framework. Cinnamon applications are intended to be reverse-proxied by web servers
+    # such as nginx or Apache.
+    [framework.http]
+        host = "127.0.0.1"
+        port = 51548
+
+        # Whether HTTP requests should be logged by the framework.
+        enable_logging = true
+
+    [framework.database]
+        enabled = true
+        type = "postgresql"
+        host = "localhost"
+        port = 5432
+        database = "student-progress-monitor"
+        username = "student-progress-monitor"
+        password = "student-progress-monitor123"
+
+    [framework.structure]
+        controllers = "src/controllers/"
+
+# Your app-specific settings go here.
+[app]
+
+    # ...
+    greeting = "Howdy"
+
+    # (Plugin) Settings for the "WebServerSettings" plugin.
+    # Whether the app is behind a reverse proxy (passed through to the
+    # underlying web server - Koa).
+    proxy = true
