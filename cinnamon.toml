@@ -39,6 +39,8 @@
     # ...
     greeting = "Howdy"
 
+    admin_token = "WEVJKnZupDkpuCuAbbmtNwR9iHTtz17Qxis4lwt9jJc="
+
     # (Plugin) Settings for the "WebServerSettings" plugin.
     # Whether the app is behind a reverse proxy (passed through to the
     # underlying web server - Koa).

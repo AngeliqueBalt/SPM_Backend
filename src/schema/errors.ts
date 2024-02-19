@@ -1,4 +1,3 @@
-//IF:ASL_ERRORS
 import { Context } from '@apollosoftwarexyz/cinnamon';
 
 export const AppError = {

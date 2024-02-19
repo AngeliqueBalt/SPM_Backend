@@ -1,50 +1,48 @@
-import { Entity, Property } from '@mikro-orm/core';
+import { Collection, Entity, Enum, ManyToMany, ManyToOne, OneToMany, Property } from '@mikro-orm/core';
 import { TrackedBaseEntity } from './BaseEntity';
+import { Class } from './Class';
+
+export enum UserType {
+    admin = "admin",
+    teacher = "teacher",
+    student = "student",
+}
 
 @Entity({ tableName: 'users' })
 export class User extends TrackedBaseEntity {
 
+    @Property({ type: 'text' })
+    name!: string;
+
     @Property({ length: 255, unique: true })
     email!: string;
 
-    @Property({ unique: true })
-    username!: string;
-
-    @Property({ type: 'text', nullable: true })
-    displayName?: string;
-
-    @Property({ persist: false })
-    get smartName() {
-        return this.displayName ?? `@${this.username}`;
-    }
-
-    @Property({ columnType: 'text', nullable: true })
-    avatar?: string;
+    @Property({ length: 16, columnType: "varchar" })
+    idNumber?: string;
 
     @Property({ length: 256, hidden: true })
     password!: string;
 
-    @Property()
-    isAdmin: boolean = false;
+    @Enum(() => UserType)
+    userType!: UserType;
 
-    @Property()
-    isTeacher: boolean = false;
+    @OneToMany(() => Class, clazz => clazz.teacher)
+    teachingClasses = new Collection<Class>(this);
 
     constructor(fields: {
         email: string;
-        username: string;
-        displayName?: string;
-        gender?: string;
-        avatar?: string;
+        name: string;
+        idNumber?: string;
         passwordHash: string;
+        userType: UserType;
     }) {
         super();
 
+        this.name = fields.name;
         this.email = fields.email;
-        this.username = fields.username;
         this.password = fields.passwordHash;
+        this.userType = fields.userType;
 
-        if (fields.displayName) this.displayName = fields.displayName;
-        if (fields.avatar) this.avatar = fields.avatar;
+        if (fields.idNumber) this.idNumber = fields.idNumber;
     }
 }

@@ -1,9 +1,10 @@
 import { ValidationSchema } from '@apollosoftwarexyz/cinnamon-validator';
-import { EMAIL_REGEX, USERNAME_REGEX } from '../../utils/validation';
+import { EMAIL_REGEX, ID_NUMBER_REGEX, USERNAME_REGEX } from '../../utils/validation';
+import { UserType } from '../../models/User';
 
 export const LoginRequestSchema: ValidationSchema = {
     // (username or email)
-    'username': {
+    'email': {
         type: 'string',
         required: true,
         minLength: 3,
@@ -19,6 +20,12 @@ export const LoginRequestSchema: ValidationSchema = {
 
 export const CreateAccountRequestSchema: ValidationSchema = {
     'user': {
+        'name': {
+            type: 'string',
+            required: true,
+            minLength: 1,
+            maxLength: 255,
+        },
         'email': {
             type: 'string',
             required: true,
@@ -26,18 +33,22 @@ export const CreateAccountRequestSchema: ValidationSchema = {
             maxLength: 255,
             matches: EMAIL_REGEX
         },
-        'username': {
+        'idNumber': {
+            type: 'string',
+            required: false,
+            maxLength: 16,
+            matches: ID_NUMBER_REGEX
+        },
+        'userType': {
             type: 'string',
             required: true,
-            minLength: 3,
-            maxLength: 32,
-            matches: USERNAME_REGEX
-        },
+            equals: Object.values(UserType)
+        }
     },
     'password': {
         type: 'string',
         required: true,
         minLength: 8,
         maxLength: 100
-    },
+    }
 };

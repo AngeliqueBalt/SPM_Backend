@@ -1,26 +1,26 @@
-//IF:AUTHENTICATION
 import { Body, Context, Controller, Method, Middleware, Route } from '@apollosoftwarexyz/cinnamon';
 
 import * as argon2 from 'argon2';
-import { studentProgressMonitorHashingOptions } from '../../utils/security';
+import { studentProgressMonitorHashingOptions } from '../utils/security';
 
-import { OnlyAuthenticated } from '../../middlewares/Authentication';
+import { OnlyAuthenticated } from '../middlewares/Authentication';
 
-import { ValidateBody } from '../../utils/validation';
-import { CreateAccountRequestSchema, LoginRequestSchema } from '../../schema/requests/authentication';
+import { ValidateBody } from '../utils/validation';
+import { CreateAccountRequestSchema, LoginRequestSchema } from '../schema/requests/authentication';
 
-import { User } from '../../models/User';
-import { Session } from '../../models/Session';
+import { User, UserType } from '../models/User';
+import { Session } from '../models/Session';
 import { expr, wrap } from '@mikro-orm/core';
 
-import { AppError, toAppError } from '../../schema/errors';
+import { AppError, toAppError } from '../schema/errors';
+import { OnlyAdmin } from '../utils/admin';
 
 /**
  * Public-facing user authentication controller.
  *
  * This contains the logic necessary to create and (de-)authenticate users.
  */
-@Controller('api', '_auth')
+@Controller('_auth')
 export default class AuthenticationController {
 
     /**
@@ -37,13 +37,12 @@ export default class AuthenticationController {
     @Route(Method.POST, 'login')
     public async login(ctx: Context) {
         // Destructure request body. It's already been validated, so this is safe to do.
-        const { username, password, pushToken } = ctx.request.body;
+        const { email, password, pushToken } = ctx.request.body;
 
         // Attempt to find the user in the database.
         const user = await ctx.getEntityManager().findOne(User, {
             $or: [
-                { [expr('lower(username)')]: username },
-                { [expr('lower(email)')]: username }
+                { [expr('lower(email)')]: email }
             ]
         });
 
@@ -52,7 +51,7 @@ export default class AuthenticationController {
             return toAppError(
                 ctx,
                 AppError.unauthenticated,
-                'Invalid username or password.'
+                'Invalid email or password.'
             );
         }
 
@@ -62,7 +61,7 @@ export default class AuthenticationController {
                 return toAppError(
                     ctx,
                     AppError.unauthenticated,
-                    'Invalid username or password.'
+                    'Invalid email or password.'
                 );
             }
         } catch (ex) {
@@ -80,13 +79,13 @@ export default class AuthenticationController {
 
         return ctx.success({
             user: wrap(user),
-            requestToken: session.requestToken,
+            sessionToken: session.requestToken,
             message: 'You have been logged in successfully!'
         });
     }
 
     /**
-     * Create a new user account.
+     * (ADMIN ONLY) Create a new user account.
      *
      * Users who are new to the application can create an account using this
      * endpoint. The request body must contain the user's email and username.
@@ -98,34 +97,38 @@ export default class AuthenticationController {
      */
     @Middleware(ValidateBody(CreateAccountRequestSchema))
     @Middleware(Body())
+    @Middleware(OnlyAdmin)
     @Route(Method.POST, 'register')
     public async register(ctx: Context) {
         // Destructure request body. It's already been validated, so this is safe to do.
         const {
             user: {
+                name,
                 email,
-                username,
+                idNumber,
+                userType,
             },
             password,
-            pushToken
         } = ctx.request.body;
 
         // Create the user in the database.
         const userRepo = ctx.getEntityManager().getRepository(User);
 
-        if ((await userRepo.count({ $or: [ { [expr('lower(username)')]: username.toLowerCase() }, { [expr('lower(email)')]: email.toLowerCase() } ] })) > 0) {
+        if (await userRepo.count({ [expr('lower(email)')]: email.toLowerCase() }) > 0) {
             return toAppError(
                 ctx,
                 AppError.conflictingEntity,
-                'A user with that username or email already exists.'
+                'A user with that email already exists.'
             );
         }
 
         // Create and persist the user.
         const user = new User({
-            username,
             email,
+            name,
+            idNumber,
             passwordHash: await argon2.hash(password, studentProgressMonitorHashingOptions),
+            userType
         });
         await ctx.getEntityManager().persistAndFlush(user);
 

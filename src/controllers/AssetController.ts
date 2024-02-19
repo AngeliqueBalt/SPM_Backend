@@ -1,7 +1,7 @@
 //IF:ASSET
-import { Context, Controller, Method, Route } from '@apollosoftwarexyz/cinnamon';
-import { Asset } from '../../models/Asset';
-import { AppError, toAppError } from '../../schema/errors';
+import { Context, Controller, LoadIf, Method, Route } from '@apollosoftwarexyz/cinnamon';
+import { Asset } from '../models/Asset';
+import { AppError, toAppError } from '../schema/errors';
 
 /**
  * Asset controller.
@@ -9,7 +9,9 @@ import { AppError, toAppError } from '../../schema/errors';
  * This controller contains the logic necessary to retrieve assets from the
  * database.
  */
-@Controller('api', 'asset', 'v1')
+
+@Controller('asset', 'v1')
+@LoadIf(() => false)
 export default class AssetController {
 
     @Route(Method.GET, '/:type/:id')

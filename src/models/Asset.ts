@@ -4,14 +4,13 @@ import { Context } from '@apollosoftwarexyz/cinnamon';
 import { User } from './User';
 
 export enum AssetType {
-    PROFILE_IMAGE = 'profileImage',
 }
 
 @Entity({ tableName: 'assets' })
 export class Asset extends BaseEntity {
 
     @Enum({ items: () => AssetType })
-    type: AssetType = AssetType.PROFILE_IMAGE;
+    type!: AssetType;
 
     @Property({ columnType: 'text', nullable: true })
     name?: string;
