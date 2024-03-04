@@ -113,15 +113,12 @@ export default class AdminUsersController {
         user.email = email;
         user.idNumber = idNumber;
 
-        // await ctx.em.flush(user);
         await ctx.getEntityManager().persistAndFlush(user);
 
             // Now, return the user and session to the client.
             return ctx.success({
             user: wrap(user),
-            message: 'The account has been created successfully!'
+            message: 'The account has been updated successfully!'
         });
     }
-
-
 }

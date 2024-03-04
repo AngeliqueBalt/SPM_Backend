@@ -21,14 +21,14 @@ export class Class extends TrackedBaseEntity {
     constructor(fields: {
         name: string;
         teacher: User;
-        students?: User[];
+        students?: Collection<User>;
     }) {
         super();
 
         this.name = fields.name;
         this.teacher = fields.teacher;
 
-        if (fields.students) this.students.add(fields.students);
+        if (fields.students) this.students = fields.students;
     }
 
 }

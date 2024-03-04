@@ -5,6 +5,8 @@ import { OnlyAuthenticated } from '../middlewares/Authentication';
 import { ValidateBody } from '../utils/validation';
 import { UserDeleteRequestSchema } from '../schema/requests/user';
 import { AppError, toAppError } from '../schema/errors';
+import { Class } from '../models/Class';
+import { EntityManager } from '@mikro-orm/core';
 
 /**
  * User controller.
@@ -20,5 +22,10 @@ export default class UserController {
     public async getCurrent(ctx: Context) {
         return ctx.user;
     }
+    // @Middleware(OnlyAuthenticated)
+    // @Route(Method.GET, '')
+    // public async get(ctx: Context) {
+    //     return await ctx.getEntityManager().find(Class, { 'teacher': ctx.user?.id},{populate: ["teacher", "students"]});
+    // }
 
 }
