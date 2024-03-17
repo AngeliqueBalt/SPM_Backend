@@ -12,7 +12,12 @@ export default class Classes {
     @Middleware(OnlyAuthenticated)
     @Route(Method.GET, '')
     public async get(ctx: Context) {
-        // return await ctx.getEntityManager().find(Class, { $or: [ { teacher: ctx.user?.id }, { students: { $contains: ctx.user?.id } } ]},{populate: ["teacher", "students"]});
         return await ctx.getEntityManager().find(Class, { $or: [{teacher: ctx.user}, {students: ctx.user}]}, {populate:["teacher", "students"]});
     }
+
+    // @Route(Method.GET, '')
+    // public async getClass (ctx: Context) {
+    //     const { id } = ctx.params;
+    //     return await ctx.getEntityManager().findOne(Class, id);
+    // }
 }

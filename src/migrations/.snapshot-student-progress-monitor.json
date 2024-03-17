@@ -352,7 +352,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "mappedType": "uuid"
         },
         "name": {
@@ -390,6 +390,7 @@
             "id"
           ],
           "referencedTableName": "public.classes",
+          "deleteRule": "cascade",
           "updateRule": "cascade"
         }
       }
@@ -432,7 +433,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "mappedType": "uuid"
         },
         "question": {
@@ -470,6 +471,7 @@
             "id"
           ],
           "referencedTableName": "public.quizzes",
+          "deleteRule": "cascade",
           "updateRule": "cascade"
         }
       }
@@ -512,7 +514,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "mappedType": "uuid"
         },
         "answer": {
@@ -559,6 +561,7 @@
             "id"
           ],
           "referencedTableName": "public.questions",
+          "deleteRule": "cascade",
           "updateRule": "cascade"
         }
       }

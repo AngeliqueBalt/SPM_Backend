@@ -22,10 +22,4 @@ export default class UserController {
     public async getCurrent(ctx: Context) {
         return ctx.user;
     }
-    // @Middleware(OnlyAuthenticated)
-    // @Route(Method.GET, '')
-    // public async get(ctx: Context) {
-    //     return await ctx.getEntityManager().find(Class, { 'teacher': ctx.user?.id},{populate: ["teacher", "students"]});
-    // }
-
 }
