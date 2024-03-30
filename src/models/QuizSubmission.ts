@@ -1,33 +1,32 @@
-import { Cascade, Entity, ManyToOne, Property } from '@mikro-orm/core';
+import { Cascade, Entity, ManyToOne, PrimaryKey, PrimaryKeyProp, Property } from '@mikro-orm/core';
 import { TrackedBaseEntity } from './BaseEntity';
 import { Quiz } from './Quiz';
 import { User } from './User';
 
-@Entity({tableName: 'quiz_submissions'})
-export class QuizSubmission extends TrackedBaseEntity {
+@Entity({ tableName: 'quiz_submissions' })
+export class QuizSubmission {
 
-    @ManyToOne({ cascade: [Cascade.REMOVE] })
+    @ManyToOne({ cascade: [Cascade.REMOVE], primary: true })
     quiz!: Quiz;
 
-    @ManyToOne({ cascade: [Cascade.REMOVE] })
+    @ManyToOne({ cascade: [Cascade.REMOVE], primary: true })
     student!: User;
 
-    @Property({type: 'integer'})
-    totalCorrect!: number;
+    @Property()
+    submitted: Date = new Date();
 
-    @Property({type: 'integer'})
-    totalQuestions!: number;
+    @Property({ type: 'integer' })
+    score!: number;
+
+    [PrimaryKeyProp]?: ['quiz', 'student'];
 
     constructor(fields: {
         quiz: Quiz;
         student: User;
-        totalCorrect: number;
-        totalQuestions: number;
+        score: number;
     }) {
-        super();
         this.quiz = fields.quiz;
         this.student = fields.student;
-        this.totalCorrect = fields.totalCorrect;
-        this.totalQuestions = fields.totalQuestions;
+        this.score = fields.score;
     }
 }
