@@ -283,11 +283,29 @@
           "primary": false,
           "nullable": false,
           "mappedType": "uuid"
+        },
+        "active_quiz_id": {
+          "name": "active_quiz_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "uuid"
         }
       },
       "name": "classes",
       "schema": "public",
       "indexes": [
+        {
+          "columnNames": [
+            "active_quiz_id"
+          ],
+          "composite": false,
+          "keyName": "classes_active_quiz_id_unique",
+          "primary": false,
+          "unique": true
+        },
         {
           "keyName": "classes_pkey",
           "columnNames": [
@@ -310,6 +328,19 @@
             "id"
           ],
           "referencedTableName": "public.users",
+          "updateRule": "cascade"
+        },
+        "classes_active_quiz_id_foreign": {
+          "constraintName": "classes_active_quiz_id_foreign",
+          "columnNames": [
+            "active_quiz_id"
+          ],
+          "localTableName": "public.classes",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.quizzes",
+          "deleteRule": "set null",
           "updateRule": "cascade"
         }
       }
@@ -392,6 +423,116 @@
           "referencedTableName": "public.classes",
           "deleteRule": "cascade",
           "updateRule": "cascade"
+        }
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "default": "gen_random_uuid()",
+          "mappedType": "uuid"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 0,
+          "mappedType": "datetime"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamptz(0)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 0,
+          "mappedType": "datetime"
+        },
+        "quiz_id": {
+          "name": "quiz_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "uuid"
+        },
+        "student_id": {
+          "name": "student_id",
+          "type": "uuid",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "uuid"
+        },
+        "total_correct": {
+          "name": "total_correct",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "total_questions": {
+          "name": "total_questions",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        }
+      },
+      "name": "quiz_submissions",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "quiz_submissions_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "quiz_submissions_quiz_id_foreign": {
+          "constraintName": "quiz_submissions_quiz_id_foreign",
+          "columnNames": [
+            "quiz_id"
+          ],
+          "localTableName": "public.quiz_submissions",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.quizzes",
+          "deleteRule": "cascade"
+        },
+        "quiz_submissions_student_id_foreign": {
+          "constraintName": "quiz_submissions_student_id_foreign",
+          "columnNames": [
+            "student_id"
+          ],
+          "localTableName": "public.quiz_submissions",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.users",
+          "deleteRule": "cascade"
         }
       }
     },

@@ -1,5 +1,5 @@
 import { TrackedBaseEntity } from './BaseEntity';
-import { Collection, Entity, ManyToMany, ManyToOne, OneToMany, Property } from '@mikro-orm/core';
+import { Collection, Entity, ManyToMany, ManyToOne, OneToMany, OneToOne, Property } from '@mikro-orm/core';
 import { User } from './User';
 import { Quiz } from './Quiz';
 
@@ -18,10 +18,14 @@ export class Class extends TrackedBaseEntity {
     @OneToMany(() => Quiz, quiz => quiz.class)
     quizzes = new Collection<Quiz>(this);
 
+    @OneToOne()
+    activeQuiz?: Quiz;
+
     constructor(fields: {
         name: string;
         teacher: User;
         students?: Collection<User>;
+        activeQuiz?: Quiz;
     }) {
         super();
 
@@ -29,6 +33,8 @@ export class Class extends TrackedBaseEntity {
         this.teacher = fields.teacher;
 
         if (fields.students) this.students = fields.students;
+
+        this.activeQuiz = fields.activeQuiz;
     }
 
 }

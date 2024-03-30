@@ -15,7 +15,6 @@ export class Quiz extends TrackedBaseEntity {
     @OneToMany(() => Question, question => question.quiz)
     questions = new Collection<Question>(this);
 
-
     constructor(fields: {
         class: Class;
         name: string;

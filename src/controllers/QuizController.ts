@@ -10,72 +10,66 @@ import { Answer } from '../models/Answer';
 /**
  * Quiz controller.
  */
-@Controller('class',':classId','quiz')
+@Controller('class', ':classId', 'quiz')
 export default class QuizController {
 
+    // add new quiz
     @Middleware(OnlyAuthenticated)
-    @Route(Method.GET, '')
-    public async getQuizzes (ctx: Context) {
+    @Middleware(Body())
+    @Route(Method.POST, '')
+    public async addQuiz(ctx: Context) {
         const { classId } = ctx.params;
-        return await ctx.getEntityManager().find(Quiz, {class: classId}, {populate: ["questions", "questions.answers"]});
+        const {
+            name,
+            questions,
+        } = ctx.request.body as {
+            name: string;
+            questions: Record<string, any>[];
+        };
+
+        console.log(ctx.request.body);
+
+        const quizRepo = ctx.getEntityManager().getRepository(Quiz);
+
+        if (await quizRepo.count({ [expr('lower(name)')]: name.toLowerCase() }) > 0) {
+            return toAppError(
+                ctx, AppError.conflictingEntity, 'A quiz with that name already exists.'
+            );
+        }
+
+        const quiz = new Quiz({
+            'class': ctx.getEntityManager().getReference(Class, classId),
+            name,
+        });
+
+        quiz.questions = new Collection<Question>(
+            quiz,
+            questions.map(rawQuestion => {
+                const question = new Question({
+                    quiz,
+                    question: rawQuestion['question'] as string,
+                });
+
+                const rawAnswers = rawQuestion['answers'] as Record<string, any>[];
+                question.answers = new Collection<Answer>(
+                    question,
+                    rawAnswers.map((rawAnswer) => new Answer({
+                        question,
+                        answer: rawAnswer['answer'],
+                        isCorrect: rawAnswer['isCorrect'],
+                    }))
+                );
+
+                return question;
+            })
+        );
+
+        await ctx.getEntityManager().persistAndFlush(quiz);
+
+        return ctx.success({
+            quiz: await wrap(quiz).populate(['questions', 'questions.answers']),
+            message: 'The quiz has been created successfully!'
+        });
     }
-
-   @Middleware(OnlyAuthenticated)
-   @Middleware(Body())
-   @Route(Method.POST, '')
-   public async addQuiz (ctx: Context) {
-       const { classId } = ctx.params;
-       const {
-           name,
-           questions,
-       } = ctx.request.body as {
-           name: string;
-           questions: Record<string, any>[];
-       };
-
-       console.log(ctx.request.body);
-
-       const quizRepo = ctx.getEntityManager().getRepository(Quiz);
-
-       if (await quizRepo.count({ [expr('lower(name)')]: name.toLowerCase() }) > 0) {
-           return toAppError(
-               ctx, AppError.conflictingEntity, 'A quiz with that name already exists.'
-           );
-       }
-
-       const quiz = new Quiz( {
-           "class": ctx.getEntityManager().getReference(Class, classId),
-           name,
-       });
-
-       quiz.questions = new Collection<Question>(
-           quiz,
-           questions.map(rawQuestion => {
-               const question = new Question({
-                   quiz,
-                   question: rawQuestion['question'] as string,
-               });
-
-               const rawAnswers = rawQuestion['answers'] as Record<string, any>[];
-               question.answers = new Collection<Answer>(
-                   question,
-                   rawAnswers.map((rawAnswer) => new Answer({
-                       question,
-                       answer: rawAnswer['answer'],
-                       isCorrect: rawAnswer['isCorrect'],
-                   }))
-               )
-
-               return question;
-           })
-       )
-
-       await ctx.getEntityManager().persistAndFlush(quiz);
-
-       return ctx.success({
-           quiz: await wrap(quiz).populate(["questions"]),
-           message: 'The quiz has been created successfully!'
-       });
-   }
 
 }

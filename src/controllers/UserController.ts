@@ -17,9 +17,18 @@ import { EntityManager } from '@mikro-orm/core';
 @Controller('user')
 export default class UserController {
 
+    // get current user
     @Middleware(OnlyAuthenticated)
     @Route(Method.GET, '')
     public async getCurrent(ctx: Context) {
         return ctx.user;
     }
+
+    // get all classes
+    @Middleware(OnlyAuthenticated)
+    @Route(Method.GET, '/classes')
+    public async get(ctx: Context) {
+        return await ctx.getEntityManager().find(Class, { $or: [{teacher: ctx.user}, {students: ctx.user}]}, {populate:["teacher", "students","activeQuiz" ,"activeQuiz.questions", "activeQuiz.questions.answers"]});
+    }
+
 }
