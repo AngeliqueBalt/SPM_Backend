@@ -1,6 +1,6 @@
 import { Body, Context, Controller, Method, Middleware, Route } from '@apollosoftwarexyz/cinnamon';
 import { OnlyAuthenticated } from '../middlewares/Authentication';
-import { wrap } from '@mikro-orm/core';
+import { serialize, wrap } from '@mikro-orm/core';
 import { QuizSubmission } from '../models/QuizSubmission';
 
 /**
@@ -12,7 +12,7 @@ export default class QuizSubmissionController {
     @Middleware(OnlyAuthenticated)
     @Middleware(Body())
     @Route(Method.POST, '')
-    public async newSubmission (ctx: Context) {
+    public async newSubmission(ctx: Context) {
         const { quizId } = ctx.params;
         const { score } = ctx.request.body;
 
@@ -24,17 +24,9 @@ export default class QuizSubmissionController {
         });
 
         return ctx.success({
-            submission: await wrap(submission).populate(["student", "quiz"]),
+            submission: serialize(await ctx.getEntityManager().populate(submission, ['quiz.class']), { forceObject: false }),
             message: 'The quiz submission was create successfully!'
         });
     }
-
-    // Get submission for current user
-    @Route(Method.GET, '')
-    public async getSubmissions (ctx: Context) {
-        // const { quizId } = ctx.params;
-        return ctx.getEntityManager().find(QuizSubmission, {}, {populate: ["score", "student", "quiz"]})
-    }
-
 
 }

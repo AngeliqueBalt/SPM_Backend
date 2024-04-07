@@ -281,7 +281,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "mappedType": "uuid"
         },
         "active_quiz_id": {
@@ -328,6 +328,7 @@
             "id"
           ],
           "referencedTableName": "public.users",
+          "deleteRule": "cascade",
           "updateRule": "cascade"
         },
         "classes_active_quiz_id_foreign": {

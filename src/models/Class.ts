@@ -1,5 +1,5 @@
 import { TrackedBaseEntity } from './BaseEntity';
-import { Collection, Entity, ManyToMany, ManyToOne, OneToMany, OneToOne, Property } from '@mikro-orm/core';
+import { Cascade, Collection, Entity, ManyToMany, ManyToOne, OneToMany, OneToOne, Property } from '@mikro-orm/core';
 import { User } from './User';
 import { Quiz } from './Quiz';
 
@@ -9,7 +9,7 @@ export class Class extends TrackedBaseEntity {
     @Property({ type: 'text' })
     name!: string;
 
-    @ManyToOne()
+    @ManyToOne({ cascade: [Cascade.PERSIST, Cascade.REMOVE] })
     teacher!: User;
 
     @ManyToMany()

@@ -6,7 +6,8 @@ import { ValidateBody } from '../utils/validation';
 import { UserDeleteRequestSchema } from '../schema/requests/user';
 import { AppError, toAppError } from '../schema/errors';
 import { Class } from '../models/Class';
-import { EntityManager } from '@mikro-orm/core';
+import { EntityManager, serialize } from '@mikro-orm/core';
+import { QuizSubmission } from '../models/QuizSubmission';
 
 /**
  * User controller.
@@ -28,7 +29,15 @@ export default class UserController {
     @Middleware(OnlyAuthenticated)
     @Route(Method.GET, '/classes')
     public async get(ctx: Context) {
-        return await ctx.getEntityManager().find(Class, { $or: [{teacher: ctx.user}, {students: ctx.user}]}, {populate:["teacher", "students","activeQuiz" ,"activeQuiz.questions", "activeQuiz.questions.answers"]});
+        return await ctx.getEntityManager().find(Class, { $or: [{teacher: ctx.user}, {students: ctx.user}]}, {populate:["teacher", "students", "quizzes", "quizzes.questions", "quizzes.questions.answers"]});
+    }
+
+    // Get submission for current user
+    @Middleware(OnlyAuthenticated)
+    @Route(Method.GET, '/submissions')
+    public async getSubmissions(ctx: Context) {
+        const submissions = await ctx.getEntityManager().find(QuizSubmission, { student: ctx.user }, { populate: ['quiz.class'] });
+        return serialize(submissions, { forceObject: false });
     }
 
 }

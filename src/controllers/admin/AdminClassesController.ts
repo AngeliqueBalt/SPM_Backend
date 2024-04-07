@@ -15,7 +15,7 @@ export default class AdminClassesController {
     @Middleware(OnlyAdmin)
     @Route(Method.GET, '')
     public async get(ctx: Context) {
-        return await ctx.getEntityManager().find(Class, {}, {populate: ["teacher", "students"]});
+        return await ctx.getEntityManager().find(Class, {}, {populate: ["teacher", "students", "quizzes", "quizzes.questions", "quizzes.questions.answers"]});
     }
 
     // Add new class

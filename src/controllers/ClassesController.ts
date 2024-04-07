@@ -6,6 +6,7 @@ import UserController from './UserController';
 import { Quiz } from '../models/Quiz';
 import { wrap } from '@mikro-orm/core';
 import { AppError, toAppError } from '../schema/errors';
+import { QuizSubmission } from '../models/QuizSubmission';
 
 /**
  * Classes controller.
@@ -61,5 +62,6 @@ export default class Classes {
         });
 
     }
+
 
 }

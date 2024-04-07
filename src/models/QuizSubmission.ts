@@ -1,13 +1,17 @@
-import { Cascade, Entity, ManyToOne, PrimaryKey, PrimaryKeyProp, Property } from '@mikro-orm/core';
+import { Cascade, Entity, ManyToOne, OneToOne, PrimaryKey, PrimaryKeyProp, Property } from '@mikro-orm/core';
 import { TrackedBaseEntity } from './BaseEntity';
 import { Quiz } from './Quiz';
 import { User } from './User';
+import { Class } from './Class';
 
 @Entity({ tableName: 'quiz_submissions' })
 export class QuizSubmission {
 
     @ManyToOne({ cascade: [Cascade.REMOVE], primary: true })
     quiz!: Quiz;
+
+    @Property({ persist: false, getter: true })
+    get class(): Class { return this.quiz.class; }
 
     @ManyToOne({ cascade: [Cascade.REMOVE], primary: true })
     student!: User;
