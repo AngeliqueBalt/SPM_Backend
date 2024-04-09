@@ -1,12 +1,8 @@
 import { Body, Context, Controller, Method, Middleware, Route } from '@apollosoftwarexyz/cinnamon';
 import { OnlyAuthenticated } from '../middlewares/Authentication';
 import { Class } from '../models/Class';
-import { User } from '../models/User';
-import UserController from './UserController';
 import { Quiz } from '../models/Quiz';
-import { wrap } from '@mikro-orm/core';
 import { AppError, toAppError } from '../schema/errors';
-import { QuizSubmission } from '../models/QuizSubmission';
 
 /**
  * Classes controller.
