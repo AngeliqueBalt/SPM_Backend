@@ -1,6 +1,6 @@
 import { Body, Context, Controller, Method, Middleware, Route } from '@apollosoftwarexyz/cinnamon';
 import { OnlyAuthenticated } from '../middlewares/Authentication';
-import { serialize, wrap } from '@mikro-orm/core';
+import { serialize } from '@mikro-orm/core';
 import { QuizSubmission } from '../models/QuizSubmission';
 
 /**

@@ -13,7 +13,7 @@ import { Answer } from '../models/Answer';
 @Controller('class', ':classId', 'quiz')
 export default class QuizController {
 
-    // add new quiz
+    // Add new quiz
     @Middleware(OnlyAuthenticated)
     @Middleware(Body())
     @Route(Method.POST, '')

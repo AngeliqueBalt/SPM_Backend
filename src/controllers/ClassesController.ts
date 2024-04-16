@@ -10,6 +10,7 @@ import { AppError, toAppError } from '../schema/errors';
 @Controller('class', ':classId')
 export default class Classes {
 
+    // Get all quizzes for a class
     @Middleware(OnlyAuthenticated)
     @Route(Method.GET, '/quizzes')
     public async getQuizzes (ctx: Context) {
@@ -25,7 +26,7 @@ export default class Classes {
         return (await ctx.getEntityManager().findOne(Class, {id: classId}, {populate: ["activeQuiz", "activeQuiz.questions", "activeQuiz.questions.answers"]}))?.activeQuiz;
     }
 
-    // Activate quiz
+    // Set activate quiz
     @Middleware(OnlyAuthenticated)
     @Middleware(Body())
     @Route(Method.PUT, '/activeQuiz')

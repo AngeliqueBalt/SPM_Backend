@@ -12,7 +12,7 @@ import { AppError, toAppError } from '../schema/errors';
 @Controller('report')
 export default class ReportController {
 
-    // get list of scores submitted for quiz based on quiz id
+    // Get list of scores submitted for quiz based on quiz id
     // and return an array of scores
     @Middleware(OnlyAuthenticated)
     @Route(Method.GET,'quiz/:quizId')

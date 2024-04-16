@@ -1,12 +1,7 @@
-import { Body, Context, Controller, Method, Middleware, Route } from '@apollosoftwarexyz/cinnamon';
-import * as argon2 from 'argon2';
-
+import { Context, Controller, Method, Middleware, Route } from '@apollosoftwarexyz/cinnamon';
 import { OnlyAuthenticated } from '../middlewares/Authentication';
-import { ValidateBody } from '../utils/validation';
-import { UserDeleteRequestSchema } from '../schema/requests/user';
-import { AppError, toAppError } from '../schema/errors';
 import { Class } from '../models/Class';
-import { EntityManager, serialize } from '@mikro-orm/core';
+import { serialize } from '@mikro-orm/core';
 import { QuizSubmission } from '../models/QuizSubmission';
 
 /**
@@ -18,14 +13,14 @@ import { QuizSubmission } from '../models/QuizSubmission';
 @Controller('user')
 export default class UserController {
 
-    // get current user
+    // Get current user
     @Middleware(OnlyAuthenticated)
     @Route(Method.GET, '')
     public async getCurrent(ctx: Context) {
         return ctx.user;
     }
 
-    // get all classes
+    // Get all classes
     @Middleware(OnlyAuthenticated)
     @Route(Method.GET, '/classes')
     public async get(ctx: Context) {

@@ -1,8 +1,16 @@
 const MIN_K = 3;
 
+/**
+ * The size of k is calculated based on the number of scores in the list/the class size.
+ *
+ * @param n is the number of scores in the list.
+ * @returns the size of k.
+ */
+
 export function computeBucketSize(n: number) {
     return Math.ceil(Math.max(MIN_K/n, MIN_K/20) * n);
 }
+
 
 /**
  * Bucketise sorts the list of rawScores into buckets sized by {@link #computeBucketSize}.
@@ -13,19 +21,21 @@ export function computeBucketSize(n: number) {
  */
 export function bucketise(rawScores: number[]): number[][] | undefined {
     const k = computeBucketSize(rawScores.length);
+
     if (rawScores.length < k) {
         return undefined;
     }
 
+    // the number of buckets needed for the class
     const n = Math.floor(rawScores.length / k);
 
+    // the number of scores that are left over after the score list is divided into buckets of size k
     const remainder = rawScores.length % k;
 
     // sort scores from lowest to highest
     const scores = rawScores.sort((a, b) => a - b);
 
     const buckets: number[][] = [];
-
 
     // make n buckets
     for(let i = 0; i < n; i++) {
@@ -35,6 +45,7 @@ export function bucketise(rawScores: number[]): number[][] | undefined {
         // fill bucket
         for (let index = 0; index < k; index++){
             // k * i is the offset to move along the list of scores
+            // i.e. for the first bucket, the offset is 0, so will get the first k scores
             bucket.push(scores[index + k*i]);
 
         }
@@ -75,7 +86,7 @@ export function normalise(buckets: number[][] | undefined) {
 
         if (lastItemCurrentBucket === firstItemNextBucket) {
             // if yes:
-            // push items from bucket with less to bucket with more.
+            // push items into nextBucket.
             let normalisedBucket: number[] = [];
 
             // For every entry in the bucket, check if it is not equal to the last item in the current bucket.
@@ -110,7 +121,7 @@ export function normalise(buckets: number[][] | undefined) {
 
 
 /**
- * Anonymise takes the buckets from the bucketise function and creates a new array with the first and last item of the bucket.
+ * Anonymise takes the buckets from the normalise function and creates a new array with the first and last item of the bucket.
  *
  * @param buckets a list of sorted buckets, each of size k.
  * @returns a new bucket only containing the first and last item in each bucket.

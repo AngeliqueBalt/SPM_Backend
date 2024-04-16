@@ -1,5 +1,4 @@
-import { Cascade, Entity, ManyToOne, OneToOne, PrimaryKey, PrimaryKeyProp, Property } from '@mikro-orm/core';
-import { TrackedBaseEntity } from './BaseEntity';
+import { Cascade, Entity, ManyToOne, PrimaryKeyProp, Property } from '@mikro-orm/core';
 import { Quiz } from './Quiz';
 import { User } from './User';
 import { Class } from './Class';

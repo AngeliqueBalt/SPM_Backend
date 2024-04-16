@@ -1,4 +1,3 @@
-//IF:ASSET
 import { Context, Controller, LoadIf, Method, Route } from '@apollosoftwarexyz/cinnamon';
 import { Asset } from '../models/Asset';
 import { AppError, toAppError } from '../schema/errors';

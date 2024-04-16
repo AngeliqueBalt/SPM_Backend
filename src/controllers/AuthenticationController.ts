@@ -8,7 +8,7 @@ import { OnlyAuthenticated } from '../middlewares/Authentication';
 import { ValidateBody } from '../utils/validation';
 import { CreateAccountRequestSchema, LoginRequestSchema } from '../schema/requests/authentication';
 
-import { User, UserType } from '../models/User';
+import { User } from '../models/User';
 import { Session } from '../models/Session';
 import { expr, wrap } from '@mikro-orm/core';
 
@@ -37,7 +37,7 @@ export default class AuthenticationController {
     @Route(Method.POST, 'login')
     public async login(ctx: Context) {
         // Destructure request body. It's already been validated, so this is safe to do.
-        const { email, password, pushToken } = ctx.request.body;
+        const { email, password } = ctx.request.body;
 
         // Attempt to find the user in the database.
         const user = await ctx.getEntityManager().findOne(User, {
