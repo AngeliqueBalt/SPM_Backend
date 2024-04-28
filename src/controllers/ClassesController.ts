@@ -31,7 +31,6 @@ export default class Classes {
     @Middleware(Body())
     @Route(Method.PUT, '/activeQuiz')
     public async setActiveQuiz(ctx: Context) {
-        // TODO: put current quiz id as active quiz id in the current class
         const {
             activeQuiz,
         } = ctx.request.body
