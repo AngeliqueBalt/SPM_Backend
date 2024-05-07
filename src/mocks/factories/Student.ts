@@ -2,7 +2,7 @@ import { Factory, Faker } from '@mikro-orm/seeder';
 import { User, UserType } from '../../models/User';
 import { EntityData } from '@mikro-orm/core';
 import * as crypto from 'node:crypto';
-import { password } from '../data/user';
+import { mockPasswordHash } from '../data/user';
 
 export class StudentFactory extends Factory<User> {
     model = User;
@@ -17,7 +17,7 @@ export class StudentFactory extends Factory<User> {
             name: this.generateName(faker),
             email: faker.helpers.unique(faker.internet.email),
             idNumber: `SCH-S${faker.helpers.unique(() => faker.random.alphaNumeric(4, {casing: 'upper'}))}`,
-            password,
+            password: mockPasswordHash,
             userType: UserType.student,
         }
     }

@@ -3,7 +3,7 @@ import { EntityData, EntityManager } from '@mikro-orm/core';
 import { QuizSubmission } from '../../models/QuizSubmission';
 import { Quiz } from '../../models/Quiz';
 
-import { Skew, gaussianRandomDouble, hybridWeightedRandomDouble } from '../utils/random';
+import { Skew, hybridWeightedRandomDouble } from '../utils/random';
 
 export class QuizSubmissionFactory extends Factory<QuizSubmission> {
     model = QuizSubmission;

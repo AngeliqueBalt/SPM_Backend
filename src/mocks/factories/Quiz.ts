@@ -1,21 +1,30 @@
 import { Quiz } from '../../models/Quiz';
-import { Factory, Faker } from '@mikro-orm/seeder';
+import { Factory, faker, Faker } from '@mikro-orm/seeder';
 import { Class } from '../../models/Class';
 import { EntityData, EntityManager } from '@mikro-orm/core';
+
+type NamingStrategy = (faker: Faker) => string;
 
 export class QuizFactory extends Factory<Quiz> {
     model = Quiz;
 
     private readonly clazz: Class;
 
-    constructor(em: EntityManager, clazz: Class) {
+    private readonly namingStrategy: NamingStrategy;
+
+    constructor(
+        em: EntityManager,
+        clazz: Class,
+        namingStrategy: NamingStrategy = (faker) => faker.helpers.unique(faker.color.human)
+    ) {
         super(em);
         this.clazz = clazz;
+        this.namingStrategy = namingStrategy;
     }
 
     protected definition(faker: Faker): EntityData<Quiz> {
         return {
-            name: `${faker.helpers.unique(faker.color.human)} Quiz`,
+            name: `${this.namingStrategy(faker)} Quiz`,
             class: this.clazz,
             questions: this.makeQuestions(10),
         };

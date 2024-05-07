@@ -13,6 +13,10 @@
         "db:seed": "yarn mikro-orm seeder:run",
         "db:fresh": "yarn mikro-orm migration:fresh",
         "db:fresh:seed": "yarn mikro-orm migration:fresh --seed",
+        "integration-test:start": "NODE_ENV=integration-test yarn ts-node .",
+        "integration-test:db:seed": "NODE_ENV=integration-test yarn mikro-orm seeder:run -c IntegrationTestDatabaseSeeder",
+        "integration-test:db:fresh": "NODE_ENV=integration-test yarn mikro-orm migration:fresh",
+        "integration-test:db:fresh:seed": "NODE_ENV=integration-test yarn mikro-orm migration:fresh --seed IntegrationTestDatabaseSeeder",
         "lint": "eslint .",
         "lint:fix": "eslint --fix ."
     },
@@ -29,6 +33,7 @@
         "@yarnpkg/sdks": "^3.0.0-rc.50",
         "argon2": "^0.31.0",
         "reflect-metadata": "^0.1.13",
+        "toml": "^3.0.0",
         "ts-node": "^10.8.1",
         "typescript": "^5.2.2"
     },

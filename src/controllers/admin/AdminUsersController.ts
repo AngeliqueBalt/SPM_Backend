@@ -17,7 +17,9 @@ export default class AdminUsersController {
     @Middleware(OnlyAdmin)
     @Route(Method.GET, '')
     public async get(ctx: Context) {
-        return await ctx.getEntityManager().find(User, {});
+        const users = await ctx.getEntityManager().find(User, {});
+        users.sort((a, b) => (a.idNumber ?? '')?.localeCompare(b.idNumber ?? ''));
+        return users;
     }
 
     @Middleware(ValidateBody(CreateAccountRequestSchema))

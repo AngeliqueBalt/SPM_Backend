@@ -1,7 +1,7 @@
 import { Factory, Faker } from '@mikro-orm/seeder';
 import { User, UserType } from '../../models/User';
 import { EntityData } from '@mikro-orm/core';
-import { password } from '../data/user';
+import { mockPasswordHash } from '../data/user';
 
 export class AdminFactory extends Factory<User> {
     model = User;
@@ -11,7 +11,7 @@ export class AdminFactory extends Factory<User> {
             name: faker.name.fullName(),
             email: faker.internet.email(),
             idNumber: undefined,
-            password,
+            password: mockPasswordHash,
             userType: UserType.admin,
         }
     }

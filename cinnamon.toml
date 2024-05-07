@@ -2,7 +2,7 @@
 [framework]
     # Framework Core Settings.
     [framework.core]
-        # Whether or not the app is in development mode.
+        # Whether the app is in development mode.
         # This is overridden by NODE_ENV if it is set. Refer to the documentation for more information.
         development_mode = true
 
@@ -15,14 +15,15 @@
     # HTTPS is not built into the framework. Cinnamon applications are intended to be reverse-proxied by web servers
     # such as nginx or Apache.
     [framework.http]
-        host = "127.0.0.1"
+        host = "0.0.0.0"
         port = 51548
 
         # Whether HTTP requests should be logged by the framework.
         enable_logging = true
 
     [framework.database]
-        enabled = true
+        enabled = false
+        override = true
         type = "postgresql"
         host = "localhost"
         port = 5432
